@@ -1,7 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-***The google map api only allows one API call per day for non-paying users, so I didn't bother
-getting and api-key***
+***The google map api only allows one API call per day for non-paying users***
 
 ### `npm start`
 
