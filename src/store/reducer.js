@@ -34,6 +34,7 @@ export default function reducer(state=initialState, action) {
         items: action.payload.trans
       };
     case SELECT_PROPERTY:
+  
       return{
         ...state,
         selectedProperty: action.payload.property

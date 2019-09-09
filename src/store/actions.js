@@ -5,7 +5,6 @@ export const SELECT_PROPERTY = 'SELECT_PROPERTY';
 
 // Actions
 export function fetchTransaction(){
-  console.log("transaction")
   return dispatch => {
     dispatch(fetchTransactionBegin());
     return fetch("http://127.0.0.1:8000/transactions/")

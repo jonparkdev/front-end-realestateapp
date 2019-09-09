@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { setSelectedProperty, fetchTransaction } from '../store/actions'
-import { GoogleMap, withScriptjs, withGoogleMap, Marker } from "react-google-maps"
+import { GoogleMap, withScriptjs, withGoogleMap, Marker, InfoWindow } from "react-google-maps"
 
-class MapComponent extends React.Component {
+class MapComponent extends Component {
   componentDidMount(){
 
     this.props.dispatch(fetchTransaction());
@@ -12,7 +12,7 @@ class MapComponent extends React.Component {
 
   render(){
     const{items, loading, error, selectedProperty} = this.props;
-    console.log(error)
+
     if(error){
       return <h1>Error! {error.message}, either wrong endpoint or server is not being served!</h1>;
     }
@@ -23,20 +23,45 @@ class MapComponent extends React.Component {
 
     return (
         <GoogleMap
-          defaultZoom={12}
-          defaultCenter = {{lat:43.673225 , lng: -79.383186}}
+          defaultZoom={11.5}
+          defaultCenter = {{lat:43.703225 , lng: -79.383186}}
         >
-        {items && items.map( item => {
-          return (
-            <Marker key={item.property_key} position = {{
-              lat: item.location.lat, lng: item.location.lng
-            }} />
-          );
-        })}
-        </GoogleMap>
-    );
+        {items.map((item) => (
+          <Marker
+            key={item.property_id}
+            position = {{
+              lat: item.location.lat,
+              lng: item.location.lng
+            }}
+            onClick ={() => {
+              this.props.dispatch(setSelectedProperty(item));
+            }}
+          />
 
-  }
+        ))}
+        {selectedProperty && (
+          <InfoWindow
+          position = {{
+            lat: selectedProperty.location.lat,
+            lng: selectedProperty.location.lng
+          }}
+          onCloseClick= {() => {
+            this.props.dispatch(setSelectedProperty(null))
+          }}
+          >
+            <div>
+              <h2> Property Type: {selectedProperty.property_type} </h2>
+              <h2> Price: ${new Intl.NumberFormat({ style: 'currency', currency: 'USD' }).format(selectedProperty.price)} </h2>
+            </div>
+
+          </InfoWindow>
+        )}
+
+
+
+        </GoogleMap>
+      );
+    }
 }
 
 const WrapMap = withScriptjs(withGoogleMap(MapComponent));
